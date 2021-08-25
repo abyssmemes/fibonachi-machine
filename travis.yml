@@ -1,0 +1,21 @@
+sudo: requiered
+services:
+  - docker 
+
+before_install:
+  - docker build -t abyssmemes/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true abyssmemes/react-test npm test  
+
+after_success:
+  - docker build -t abyssmemes/multi-client ./client
+  - docker build -t abyssmemes/multi-nginx ./nginx
+  - docker build -t abyssmemes/multi-server ./server
+  - docker build -t abyssmemes/multi-worker ./worker 
+#log in dockerhub
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push abyssmemes/multi-client 
+  - docker push abyssmemes/multi-nginx  
+  - docker push abyssmemes/multi-server   
+  - docker push abyssmemes/multi-worker
