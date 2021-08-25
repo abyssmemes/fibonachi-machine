@@ -19,3 +19,15 @@ after_success:
   - docker push abyssmemes/multi-nginx  
   - docker push abyssmemes/multi-server   
   - docker push abyssmemes/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: 'eu-west-2'
+  app: 'multi-docker-redis'
+  env: 'Multidockerredis-env'
+  bucket_name: 'elasticbeanstalk-eu-west-2-752876515669'
+  bucket_path: 'docker-multi'
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY  
